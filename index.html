@@ -261,6 +261,19 @@ h2{margin:0;font:700 clamp(30px,4.4vw,52px)/1.03 'Space Grotesk',sans-serif;lett
 .big .hl{background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
 .contact .row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:28px}
 .contact p{margin:0;max-width:560px;font-size:18px;color:var(--muted)}
+.cbtns{display:flex;flex-wrap:wrap;gap:12px}
+.formcard{position:relative;margin-top:40px;background:#12151A;border:1px solid #242931;border-radius:20px;padding:clamp(18px,3vw,32px);color:#EEF0F3;box-shadow:0 18px 40px -16px rgba(0,0,0,.5);overflow:hidden;isolation:isolate}
+.formcard::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--ang,0deg),transparent 0 70%,#FF7A1A 80%,#FFB547 88%,transparent 95%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spinb 6s linear infinite;pointer-events:none;z-index:-1}
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes spinb{to{--ang:360deg}}
+.fchead{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px}
+.fchead h3{margin:0;font-size:clamp(20px,2.4vw,26px);color:#EEF0F3}
+.fchead p{margin:6px 0 0;color:#A0A8B2;font-size:15px}
+.fcdot{flex:none;width:12px;height:12px;margin-top:9px;border-radius:50%;background:#FF7A1A;box-shadow:0 0 0 0 rgba(255,122,26,.6);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 12px rgba(255,122,26,0)}100%{box-shadow:0 0 0 0 rgba(255,122,26,0)}}
+.jf{display:block;width:100%;min-height:620px;border:0;background:#12151A;border-radius:12px;transition:height .3s ease}
+@media (max-width:640px){.jf{min-height:760px}}
+@media (prefers-reduced-motion:reduce){.formcard::before,.fcdot{animation:none}}
 .foot2{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:72px;padding-top:24px;border-top:1px solid var(--line);font:500 12px 'JetBrains Mono',monospace;color:var(--muted)}
 .totop{position:fixed;right:18px;bottom:18px;z-index:40;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .3s,transform .3s}
 .totop.show{opacity:1;transform:none;pointer-events:auto}
@@ -615,7 +628,9 @@ sitecheck/  bandwatch-hf/  zcs/  bike-match/
 <div class="kicker">Contact</div>
 <h2 class="big rv">Have a messy workflow? <span class="hl">Let's make it run.</span></h2>
 <div class="row rv" style="--d:.1s"><p>Open to freelance builds, AI automation for small businesses, and internships.</p>
-<a class="btn primary" href="https://github.com/Supremeshiba1717" target="_blank" rel="noopener">GitHub <span class="arr" aria-hidden="true">↗</span></a></div>
+<div class="cbtns"><a class="btn primary" href="#msg" data-jump="msg">Send a message <span class="arr" aria-hidden="true">↓</span></a><a class="btn" href="https://github.com/Supremeshiba1717" target="_blank" rel="noopener">GitHub <span class="arr" aria-hidden="true">↗</span></a></div></div>
+<div class="formcard rv" id="msg" style="--d:.15s"><div class="fchead"><span class="fcdot" aria-hidden="true"></span><div><h3>Send me a message</h3><p>Goes straight to my inbox. Leave your email and I&#x27;ll reply there.</p></div></div>
+<iframe id="jfform" class="jf" title="Contact form" loading="lazy" src="https://form.jotform.com/263298573905066" allow="geolocation 'none'"></iframe></div>
 <div class="foot2"><span>Jack Brecker · Berwyn, PA</span><span>Hand-tuned HTML, CSS and JS · built with AI assistance</span></div>
 </div></footer>
 <button class="iconbtn totop" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
@@ -623,6 +638,10 @@ sitecheck/  bandwatch-hf/  zcs/  bike-match/
 (function(){
 var root=document.documentElement;root.classList.add('js');
 var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// jotform height + jump
+var jf=document.getElementById('jfform');
+window.addEventListener('message',function(e){if(!jf||typeof e.data!=='string')return;if(!/(^|\.)jotform\.com$/.test((e.origin||'').replace(/^https:\/\//,'')))return;var a=e.data.split(':');if(a[0]==='setHeight'&&+a[1]>200)jf.style.height=(+a[1]+20)+'px'});
+document.querySelectorAll('[data-jump]').forEach(function(b){b.addEventListener('click',function(ev){var t=document.getElementById(b.getAttribute('data-jump'));if(t){ev.preventDefault();t.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}})});
 // theme
 var saved=null;try{saved=localStorage.getItem('jb-theme')}catch(e){}
 if(saved==='light'||saved==='dark')root.setAttribute('data-theme',saved);
